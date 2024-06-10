@@ -52,8 +52,8 @@ const Graph: React.FC = () => {
             animationDuration={calcSpeed()}
             hide={generatedValue === 0}
           />
-          <YAxis domain={[0, 10]} hide />
-          <XAxis dataKey="value" hide />
+          <YAxis domain={[0, 10]} hide={true} />
+          <XAxis dataKey="value" hide={true} />
         </LineChart>
       </div>
     </div>

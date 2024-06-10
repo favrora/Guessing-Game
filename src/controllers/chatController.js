@@ -1,9 +1,9 @@
-import { botMessages } from './botMessages.js';
+const { botMessages } = require('./botMessages.js');
 
 let usersConnected = new Map();
 
 // Handle new socket connections
-export const handleChatConnection = (socket) => {
+const handleChatConnection = (socket) => {
   let { id } = socket.client;
 
   // Listen for 'user nickname' event
@@ -41,4 +41,8 @@ export const handleChatConnection = (socket) => {
     // Broadcast the nickname of the disconnected user
     socket.broadcast.emit("user-disconnected", tempUserNickname);
   });
+};
+
+module.exports = {
+  handleChatConnection,
 };

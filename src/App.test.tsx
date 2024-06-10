@@ -1,14 +1,22 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { act } from 'react';
+import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom/extend-expect';
-import App from './App';
 import { Provider } from 'react-redux';
+import App from './App';
 import store from './store/store';
 
 // Mocking the components used in App
-const JoinMock = () => <div data-testid="join-component">Join Component</div>;
-const GameControllerMock = () => <div data-testid="game-controller-component">GameController Component</div>;
+const JoinMock = () => (
+  <div data-testid="join-component">
+    <input placeholder="Enter your name" />
+  </div>
+);
+const GameControllerMock = () => (
+  <div data-testid="game-controller-component">
+    <button>Start</button>
+  </div>
+);
 const InfoMock = () => <div data-testid="info-component">Info Component</div>;
 const GraphMock = () => <div data-testid="graph-component">Graph Component</div>;
 const RankingMock = () => <div data-testid="ranking-component">Ranking Component</div>;
@@ -22,16 +30,20 @@ GraphMock.displayName = 'GraphMock';
 RankingMock.displayName = 'RankingMock';
 ChatMock.displayName = 'ChatMock';
 
-jest.mock('./components/Join', () => JoinMock);
-jest.mock('./components/GameController', () => GameControllerMock);
-jest.mock('./components/Info', () => InfoMock);
-jest.mock('./components/Graph', () => GraphMock);
-jest.mock('./components/Ranking', () => RankingMock);
-jest.mock('./components/Chat', () => ChatMock);
+jest.mock('./components/Join/Join', () => JoinMock);
+jest.mock('./components/GameController/GameController', () => GameControllerMock);
+jest.mock('./components/Info/Info', () => InfoMock);
+jest.mock('./components/Graph/Graph', () => GraphMock);
+jest.mock('./components/Ranking/Ranking', () => RankingMock);
+jest.mock('./components/Chat/Chat', () => ChatMock);
 
 describe('App', () => {
   test('renders the App component with all child components', () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
 
     expect(screen.getByTestId('join-component')).toBeInTheDocument();
     expect(screen.getByTestId('game-controller-component')).toBeInTheDocument();
@@ -50,7 +62,7 @@ describe('Join', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Join Component')).toBeInTheDocument();
+    expect(screen.getByTestId('join-component')).toBeInTheDocument();
     const input = screen.getByPlaceholderText('Enter your name');
     act(() => {
       fireEvent.change(input, { target: { value: 'John Doe' } });
@@ -67,8 +79,8 @@ describe('GameController', () => {
       </Provider>
     );
 
-    expect(screen.getByText('GameController Component')).toBeInTheDocument();
-    const startButton = screen.getByText('Start');
+    expect(screen.getByTestId('game-controller-component')).toBeInTheDocument();
+    const startButton = screen.getByText((content, element) => element && element.tagName.toLowerCase() === 'button' && content.trim() === 'Start');
     act(() => {
       fireEvent.click(startButton);
     });

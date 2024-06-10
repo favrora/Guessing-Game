@@ -1,5 +1,5 @@
 // Function to send bot messages at intervals
-export const botMessages = (socket) => {
+const botMessages = (socket) => {
   setTimeout(() => {
     socket.emit("chat message", {
       nickname: "CPU 1",
@@ -20,4 +20,8 @@ export const botMessages = (socket) => {
       msg: "I could play this game for hours!",
     });
   }, 8000);
+};
+
+module.exports = {
+  botMessages,
 };
