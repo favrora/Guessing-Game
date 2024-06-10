@@ -1,5 +1,5 @@
 {
-  "name": "files",
+  "name": "guessing-game",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -56,8 +56,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@testing-library/jest-dom": "^6.4.5",
     "@types/react-redux": "^7.1.23",
-    "@types/testing-library__jest-dom": "^6.0.0"
+    "@types/testing-library__jest-dom": "^6.0.0",
+    "eslint": "^8.23.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }
