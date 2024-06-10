@@ -1,43 +1,31 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
-import '@testing-library/jest-dom/extend-expect';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import App from './App';
-import store from './store/store';
 
-// Mocking the components used in App
-const JoinMock = () => (
-  <div data-testid="join-component">
-    <input placeholder="Enter your name" />
-  </div>
-);
-const GameControllerMock = () => (
-  <div data-testid="game-controller-component">
-    <button>Start</button>
-  </div>
-);
-const InfoMock = () => <div data-testid="info-component">Info Component</div>;
-const GraphMock = () => <div data-testid="graph-component">Graph Component</div>;
-const RankingMock = () => <div data-testid="ranking-component">Ranking Component</div>;
-const ChatMock = () => <div data-testid="chat-component">Chat Component</div>;
-
-// Setting display names for mocked components
-JoinMock.displayName = 'JoinMock';
-GameControllerMock.displayName = 'GameControllerMock';
-InfoMock.displayName = 'InfoMock';
-GraphMock.displayName = 'GraphMock';
-RankingMock.displayName = 'RankingMock';
-ChatMock.displayName = 'ChatMock';
-
-jest.mock('./components/Join/Join', () => JoinMock);
-jest.mock('./components/GameController/GameController', () => GameControllerMock);
-jest.mock('./components/Info/Info', () => InfoMock);
-jest.mock('./components/Graph/Graph', () => GraphMock);
-jest.mock('./components/Ranking/Ranking', () => RankingMock);
-jest.mock('./components/Chat/Chat', () => ChatMock);
+const mockStore = configureStore([]);
 
 describe('App', () => {
+  let store: any;
+
+  beforeEach(() => {
+    store = mockStore({
+      reduxStore: {
+        userName: '',
+        balance: 1000,
+        generatedValue: 0,
+        speed: 0,
+        animShow: false,
+        usersRanking: [
+          { id: '1', name: 'John Doe', score: 100 },
+          { id: '2', name: 'Jane Doe', score: 200 },
+        ],
+      },
+    });
+  });
+
   test('renders the App component with all child components', () => {
     render(
       <Provider store={store}>
@@ -45,56 +33,105 @@ describe('App', () => {
       </Provider>
     );
 
-    expect(screen.getByTestId('join-component')).toBeInTheDocument();
-    expect(screen.getByTestId('game-controller-component')).toBeInTheDocument();
-    expect(screen.getByTestId('info-component')).toBeInTheDocument();
-    expect(screen.getByTestId('graph-component')).toBeInTheDocument();
-    expect(screen.getByTestId('ranking-component')).toBeInTheDocument();
-    expect(screen.getByTestId('chat-component')).toBeInTheDocument();
-  });
-});
-
-describe('Join', () => {
-  test('renders Join component and allows input', () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
-    expect(screen.getByTestId('join-component')).toBeInTheDocument();
-    const input = screen.getByPlaceholderText('Enter your name');
-    act(() => {
-      fireEvent.change(input, { target: { value: 'John Doe' } });
-    });
-    expect(input).toHaveValue('John Doe');
-  });
-});
-
-describe('GameController', () => {
-  test('renders GameController component and allows interaction', () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
-    expect(screen.getByTestId('game-controller-component')).toBeInTheDocument();
-    const startButton = screen.getByText((content, element) => element && element.tagName.toLowerCase() === 'button' && content.trim() === 'Start');
-    act(() => {
-      fireEvent.click(startButton);
-    });
-  });
-});
-
-describe('Graph', () => {
-  test('renders Graph component', () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
+    expect(screen.getByText('Join')).toBeInTheDocument();
+    expect(screen.getByText('Start')).toBeInTheDocument();
+    expect(screen.getByText('🏅')).toBeInTheDocument();
     expect(screen.getByText(/x$/)).toBeInTheDocument();
+    expect(screen.getByText('📊 Ranking')).toBeInTheDocument();
+    expect(screen.getByText('💬 Chat (0)')).toBeInTheDocument();
+  });
+
+  test('renders the Join component and allows input', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    const input = screen.getByPlaceholderText('Enter your name');
+    fireEvent.change(input, { target: { value: 'John Doe' } });
+
+    await waitFor(() => {
+      expect(input).toHaveValue('John Doe');
+    });
+  });
+
+  test('renders the GameController component and allows interaction', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    const startButton = screen.getByText('Start');
+    fireEvent.click(startButton);
+
+    // Add more assertions to check if the state has changed accordingly
+    // Example: Check if the button is disabled after clicking
+    await waitFor(() => {
+      expect(startButton).toBeDisabled();
+    });
+  });
+
+  test('renders the Graph component', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/x$/)).toBeInTheDocument();
+    });
+  });
+
+  test('renders the Info component', async () => {
+    store = mockStore({
+      reduxStore: {
+        userName: 'John Doe',
+        balance: 1000,
+        generatedValue: 0,
+        speed: 0,
+        animShow: false,
+        usersRanking: [],
+      },
+    });
+
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('🏅')).toBeInTheDocument();
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
+
+  test('renders the Ranking component', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('📊 Ranking')).toBeInTheDocument();
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+    });
+  });
+
+  test('renders the Chat component', async () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('💬 Chat (0)')).toBeInTheDocument();
+    });
   });
 });
