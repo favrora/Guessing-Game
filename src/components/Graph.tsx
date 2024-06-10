@@ -2,18 +2,24 @@ import React from "react";
 import { LineChart, Line, XAxis, YAxis } from "recharts";
 import CountUp from "react-countup";
 import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 import '../assets/styles/Graph.css';
 
+/**
+ * Graph component for displaying the generated value and graph.
+ */
 const Graph: React.FC = () => {
-  const generatedValue = useSelector(
-    (state: any) => state.reduxStore.generatedValue
-  );
+  const generatedValue = useSelector((state: RootState) => state.reduxStore.generatedValue);
   const graphValue = [{ value: 0 }, { value: 0 }, { value: generatedValue }];
-  const speedValue = useSelector((state: any) => state.reduxStore.speed);
+  const speedValue = useSelector((state: RootState) => state.reduxStore.speed);
 
-  function calcSpeed() {
+  /**
+   * Calculate the speed for the graph animation.
+   * @returns {number} - Speed in milliseconds.
+   */
+  const calcSpeed = (): number => {
     return 3000 + 1000 * speedValue;
-  }
+  };
 
   return (
     <div className="col-12 mt-3">
@@ -27,7 +33,6 @@ const Graph: React.FC = () => {
             separator=" "
             decimals={2}
             decimal="."
-            prefix=""
             suffix="x"
           />
         </div>

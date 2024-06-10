@@ -3,7 +3,7 @@ import Chat from "./components/Chat";
 import Join from "./components/Join";
 import Info from "./components/Info";
 import Graph from "./components/Graph";
-import Start from "./components/Start";
+import GameController from "./components/GameController";
 import Ranking from "./components/Ranking";
 import './assets/styles/App.css';
 
@@ -14,7 +14,7 @@ function App() {
         <div className="row mt-5">
           <div className="col-12 col-md-4 position-relative">
             <Join />
-            <Start />
+            <GameController />
           </div>
 
           <div className="col-12 col-md-8">

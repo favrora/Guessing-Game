@@ -1,42 +1,48 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store/store";
 import { setUserName } from "../store/reduxStoreSlice";
-import { default as socket } from "./ws";
+import { default as socket } from "../services/ws";
 import '../assets/styles/Join.css';
 
-function Join() {
+/**
+ * Login component for allowing the user to enter a nickname and start the game
+ */
+const Join: React.FC = () => {
   const dispatch = useDispatch();
-  const [nickname, setNickname] = useState("");
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const userName = useSelector((state: any) => state.reduxStore.userName);
+  const [nickname, setNickname] = useState<string>("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+  const userName = useSelector((state: RootState) => state.reduxStore.userName);
 
   const submitNickname = () => {
     socket.emit("user nickname", nickname);
     dispatch(setUserName(nickname));
   };
 
+  /**
+   * Enable or disable the button based on the length of the nickname.
+   */
   useEffect(() => {
-    setIsButtonDisabled(3 > nickname.length);
+    setIsButtonDisabled(nickname.length < 3);
   }, [nickname]);
 
   return (
     <div className={`card-box join-box ${userName ? "d-none" : ""}`}>
       <div className="join-title">Welcome</div>
 
-      <form className="">
+      <form>
         <div className="join-hint">Please Insert Your Name</div>
         <input
           type="text"
           onChange={(e) => setNickname(e.target.value)}
           value={nickname}
-          className=""
-          placeholder=""
+          placeholder="Enter your nickname"
         />
+
         <button
           className="btn btn-primary"
-          onClick={() => {
-            submitNickname();
-          }}
+          onClick={submitNickname}
           type="button"
           disabled={isButtonDisabled}
         >

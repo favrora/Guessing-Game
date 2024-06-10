@@ -1,6 +1,12 @@
-// src/store/reduxStoreSlice.ts
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface Player {
+  id: number;
+  name: string;
+  point: any;
+  multiplier: any;
+  score: number;
+}
 
 export interface CounterState {
   userName: string;
@@ -8,7 +14,7 @@ export interface CounterState {
   generatedValue: number;
   speed: number;
   animShow: boolean;
-  usersRanking: any;
+  usersRanking: Player[];
 }
 
 const initialState: CounterState = {
@@ -27,20 +33,25 @@ export const reduxStore = createSlice({
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
     },
+
     generateVal: (state, action: PayloadAction<number>) => {
       state.animShow = true;
       state.generatedValue = action.payload;
     },
+
     speedStateVal: (state, action: PayloadAction<number>) => {
       state.speed = action.payload;
     },
+
     animStateVal: (state, action: PayloadAction<boolean>) => {
       state.animShow = action.payload;
     },
+
     updateBalanceVal: (state, action: PayloadAction<number>) => {
       state.balance = action.payload;
     },
-    setUsersRanking: (state, action: PayloadAction<any>) => {
+
+    setUsersRanking: (state, action: PayloadAction<Player[]>) => {
       state.usersRanking = action.payload;
     },
   },

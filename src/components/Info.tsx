@@ -1,10 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 import '../assets/styles/Info.css';
 
-function Info() {
-  const userName = useSelector((state: any) => state.reduxStore.userName);
-  const userBalance = useSelector((state: any) => state.reduxStore.balance);
+/**
+ * Info component for displaying user information and balance.
+ */
+const Info: React.FC = () => {
+  // Select userName from the Redux store
+  const userName = useSelector((state: RootState) => state.reduxStore.userName);
+  
+  // Select userBalance from the Redux store
+  const userBalance = useSelector((state: RootState) => state.reduxStore.balance);
 
   return (
     <div className="row">

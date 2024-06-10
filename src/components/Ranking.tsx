@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../store/store"; // Ensure the correct import path for RootState
 import '../assets/styles/Ranking.css';
 
-function Ranking() {
-  let ranking = useSelector((state: any) => state.reduxStore.usersRanking);
-  let animationShow = useSelector((state: any) => state.reduxStore.animShow);
-  let arr = [...ranking];
+// Define the shape of a player in the ranking
+interface Player {
+  id: number;
+  name: string;
+  score: number;
+}
+
+/**
+ * Ranking component for displaying the leaderboard.
+ */
+const Ranking: React.FC = () => {
+  const ranking = useSelector((state: RootState) => state.reduxStore.usersRanking) as Player[];
+  const animationShow = useSelector((state: RootState) => state.reduxStore.animShow);
+
+  // Memoize the sorted ranking array to avoid unnecessary calculations
+  const sortedRanking = useMemo(() => {
+    return [...ranking].sort((a, b) => b.score - a.score);
+  }, [ranking]);
 
   return (
     <div className="col-12 col-md-6">
@@ -21,24 +36,20 @@ function Ranking() {
             </tr>
           </thead>
           <tbody>
-            {arr
-              .sort((a, b) => b.score - a.score)
-              .map((user, index) => (
-                <tr
-                  key={user.id}
-                  className={
-                    user.name === "You" && !animationShow && user.score !== 0
-                      ? "my-result"
-                      : ""
-                  }
-                >
-                  <td>{index + 1}</td>
-                  <td>{animationShow || user.score === 0 ? "-" : user.name}</td>
-                  <td>
-                    {animationShow || user.score === 0 ? "-" : user.score}
-                  </td>
-                </tr>
-              ))}
+            {sortedRanking.map((player, index) => (
+              <tr
+                key={player.id}
+                className={
+                  player.name === "You" && !animationShow && player.score !== 0
+                    ? "my-result"
+                    : ""
+                }
+              >
+                <td>{index + 1}</td>
+                <td>{animationShow || player.score === 0 ? "-" : player.name}</td>
+                <td>{animationShow || player.score === 0 ? "-" : player.score}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
