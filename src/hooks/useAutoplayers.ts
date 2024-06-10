@@ -28,7 +28,7 @@ export const useAutoplayers = (pointsValue: number, multiplierValue: number) => 
     for (let i = 0; i < 5; i++) {
       const data: Player = {
         id: i,
-        name: i === 0 ? "You" : `CPU ${i}`,
+        name: i === 0 ? "You" : `Bot ${i}`,
         point: "-",
         multiplier: "-",
         score: 0,
@@ -59,7 +59,7 @@ export const useAutoplayers = (pointsValue: number, multiplierValue: number) => 
       const m = random(1, 4, 2);
       autoplayersGuess.push({
         id: i + 1,
-        name: `CPU ${i + 1}`,
+        name: `Bot ${i + 1}`,
         point: p,
         multiplier: m,
         score: Math.round(p * m),
