@@ -1,11 +1,11 @@
 import React from "react";
-import Chat from "./components/Chat";
-import Join from "./components/Join";
-import Info from "./components/Info";
-import Graph from "./components/Graph";
-import GameController from "./components/GameController";
-import Ranking from "./components/Ranking";
-import './assets/styles/App.css';
+import Chat from "./components/Chat/Chat";
+import Join from "./components/Join/Join";
+import Info from "./components/Info/Info";
+import Graph from "./components/Graph/Graph";
+import GameController from "./components/GameController/GameController";
+import Ranking from "./components/Ranking/Ranking";
+import './App.css';
 
 function App() {
   return (

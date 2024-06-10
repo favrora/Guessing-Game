@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store"; // Ensure the correct import path for RootState
-import '../assets/styles/Ranking.css';
+import { RootState } from "../../store/store";
+import './Ranking.css';
 
 // Define the shape of a player in the ranking
 interface Player {

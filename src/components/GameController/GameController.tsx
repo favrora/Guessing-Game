@@ -1,10 +1,10 @@
 import React from "react";
-import { useGameLogic } from "../hooks/useGameLogic";
-import '../assets/styles/Start.css';
-import PointsToggle from "./PointsToggle";
-import MultiplierToggle from "./MultiplierToggle";
-import SpeedControl from "./SpeedControl";
-import CurrentRound from "./CurrentRound";
+import { useGameLogic } from "../../hooks/useGameLogic";
+import './GameController.css';
+import PointsToggle from "../PointsToggle/PointsToggle";
+import MultiplierToggle from "../MultiplierToggle/MultiplierToggle";
+import SpeedControl from "../SpeedControl/SpeedControl";
+import CurrentRound from "../CurrentRound/CurrentRound";
 
 /**
  * GameController component for managing the game process.

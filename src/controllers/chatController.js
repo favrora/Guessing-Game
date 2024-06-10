@@ -1,8 +1,9 @@
-// A map to store connected users with their socket IDs
+import { botMessages } from './botMessages.js';
+
 let usersConnected = new Map();
 
 // Handle new socket connections
-const handleChatConnection = (socket) => {
+export const handleChatConnection = (socket) => {
   let { id } = socket.client;
 
   // Listen for 'user nickname' event
@@ -15,30 +16,6 @@ const handleChatConnection = (socket) => {
 
     botMessages(socket);
   });
-
-  // Function to send bot messages at intervals
-  const botMessages = (socket) => {
-    setTimeout(() => {
-      socket.emit("chat message", {
-        nickname: "CPU 1",
-        msg: "hi guys",
-      });
-    }, 2000);
-
-    setTimeout(() => {
-      socket.emit("chat message", {
-        nickname: "CPU 2",
-        msg: "hi men",
-      });
-    }, 5000);
-
-    setTimeout(() => {
-      socket.emit("chat message", {
-        nickname: "CPU 1",
-        msg: "I could play this game for hours!",
-      });
-    }, 8000);
-  };
 
   // Listen for 'chat message' events from the client
   socket.on("chat message", ({ nickname, msg }) => {
@@ -64,8 +41,4 @@ const handleChatConnection = (socket) => {
     // Broadcast the nickname of the disconnected user
     socket.broadcast.emit("user-disconnected", tempUserNickname);
   });
-};
-
-module.exports = {
-  handleChatConnection,
 };

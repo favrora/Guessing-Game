@@ -1,7 +1,7 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import { useChat } from "../hooks/useChat";
-import '../assets/styles/Chat.css';
+import { useChat } from "../../hooks/useChat";
+import './Chat.css';
 
 /**
  * Chat component for displaying and sending chat messages.

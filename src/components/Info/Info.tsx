@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import '../assets/styles/Info.css';
+import { RootState } from "../../store/store";
+import './Info.css';
 
 /**
  * Info component for displaying user information and balance.

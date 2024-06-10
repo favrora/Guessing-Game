@@ -2,8 +2,8 @@ import React from "react";
 import { LineChart, Line, XAxis, YAxis } from "recharts";
 import CountUp from "react-countup";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import '../assets/styles/Graph.css';
+import { RootState } from "../../store/store";
+import './Graph.css';
 
 /**
  * Graph component for displaying the generated value and graph.

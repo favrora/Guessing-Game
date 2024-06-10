@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store/store";
-import { setUserName } from "../store/reduxStoreSlice";
-import { default as socket } from "../services/ws";
-import '../assets/styles/Join.css';
+import { RootState } from "../../store/store";
+import { setUserName } from "../../store/reduxStoreSlice";
+import { default as socket } from "../../services/ws";
+import './Join.css';
 
 /**
  * Login component for allowing the user to enter a nickname and start the game
