@@ -2,6 +2,8 @@
 
 This is a guessing game based on random numbers and will progress through a series of rounds. The goal of this game is to observe the rising Multiplier value, predict at which point it will freeze, and place points based on the prediction.
 
+Tech Stack: ```TypeScript, React, Redux, Node, Socket.io, Jest, ESLint```
+
 ## Features
 
 - Livetime chat
@@ -9,16 +11,12 @@ This is a guessing game based on random numbers and will progress through a seri
 - Render graph with configurable speed
 - Possibility to choose the point and multiplier for the round
 
-### Built With
+### Optimization
 
-- TypeScript
-- React.js
-- Redux
-- Node.js
-- Socket.io
-- Bootstrap CSS
-- Jest
-- ESLint
+- botMessages Controller to create bots and messages from them inside the game
+- Jest tests with custom store data to test the all components
+- ESLint is configured to maintain code quality and consistency
+- Everything is splited into small class components
 
 ## Demo
 
