@@ -20,7 +20,7 @@ Tech Stack: ```TypeScript, React, Redux, Node, Socket.io, Jest, ESLint```
 
 ## Demo
 
-<img src="./public/preview.jpg" width="100%">
+<img src="./public/demo.jpg" width="100%">
 
 > Preview screenshot
 
