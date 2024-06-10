@@ -37,7 +37,7 @@ const Join: React.FC = () => {
           type="text"
           onChange={(e) => setNickname(e.target.value)}
           value={nickname}
-          placeholder="Enter your nickname"
+          placeholder="Enter your name"
         />
 
         <button

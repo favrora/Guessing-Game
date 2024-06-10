@@ -52,7 +52,7 @@ export const useGameLogic = () => {
     dispatch(generateVal(newGeneratedValue));
     dispatch(updateBalanceVal(userBalance - pointsValue));
 
-    setTimeout(updateBalance, 3000 + 1000 * speedValue);
+    setTimeout(updateBalance, calcTimeout());
   };
 
   /**
@@ -65,6 +65,14 @@ export const useGameLogic = () => {
     } else {
       dispatch(updateBalanceVal(userBalance - pointsValue));
     }
+  };
+
+  /**
+   * Calculate the timeout duration based on speedValue.
+   * @returns {number} - Timeout duration in milliseconds.
+   */
+  const calcTimeout = (): number => {
+    return 3000 / (speedValue || 1); // Higher speedValue means faster animation
   };
 
   return {

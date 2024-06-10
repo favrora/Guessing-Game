@@ -18,7 +18,7 @@ const Graph: React.FC = () => {
    * @returns {number} - Speed in milliseconds.
    */
   const calcSpeed = (): number => {
-    return 3000 + 1000 * speedValue;
+    return 3000 / (speedValue || 1);
   };
 
   return (
