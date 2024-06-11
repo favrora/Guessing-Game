@@ -20,7 +20,7 @@ Tech Stack: ```TypeScript, React, Redux, Node, Socket.io, Jest, ESLint```
 
 ## Demo
 
-<img src="./public/demo.jpg" width="100%">
+<img src="./public/demo.jpg" width="90%">
 
 > Preview screenshot
 
@@ -32,7 +32,7 @@ To get a local copy up and running follow these simple steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/favrora/Splash-Task.git
+   git clone https://github.com/favrora/Guessing-Game.git
    ```
 2. From the root, install NPM packages
    ```sh
