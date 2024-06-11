@@ -47,6 +47,7 @@ const Chat: React.FC = () => {
             type="text"
             className="pr-3 pr-md-3"
             name="message"
+            placeholder="Send message"
             onChange={(e) => setMsg(e.target.value)}
             value={msg}
           />

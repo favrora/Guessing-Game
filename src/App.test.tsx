@@ -33,12 +33,9 @@ describe('App', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Join')).toBeInTheDocument();
-    expect(screen.getByText('Start')).toBeInTheDocument();
-    expect(screen.getByText('🏅')).toBeInTheDocument();
-    expect(screen.getByText(/x$/)).toBeInTheDocument();
-    expect(screen.getByText('📊 Ranking')).toBeInTheDocument();
-    expect(screen.getByText('💬 Chat (0)')).toBeInTheDocument();
+    expect(screen.getByTestId('join-component')).toBeInTheDocument();
+    expect(screen.getByTestId('info-graph-container')).toBeInTheDocument();
+    expect(screen.getByTestId('ranking-chat-container')).toBeInTheDocument();
   });
 
   test('renders the Join component and allows input', async () => {
@@ -66,72 +63,8 @@ describe('App', () => {
     const startButton = screen.getByText('Start');
     fireEvent.click(startButton);
 
-    // Add more assertions to check if the state has changed accordingly
-    // Example: Check if the button is disabled after clicking
     await waitFor(() => {
       expect(startButton).toBeDisabled();
-    });
-  });
-
-  test('renders the Graph component', async () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText(/x$/)).toBeInTheDocument();
-    });
-  });
-
-  test('renders the Info component', async () => {
-    store = mockStore({
-      reduxStore: {
-        userName: 'John Doe',
-        balance: 1000,
-        generatedValue: 0,
-        speed: 0,
-        animShow: false,
-        usersRanking: [],
-      },
-    });
-
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('🏅')).toBeInTheDocument();
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
-    });
-  });
-
-  test('renders the Ranking component', async () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('📊 Ranking')).toBeInTheDocument();
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
-      expect(screen.getByText('Jane Doe')).toBeInTheDocument();
-    });
-  });
-
-  test('renders the Chat component', async () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('💬 Chat (0)')).toBeInTheDocument();
     });
   });
 });

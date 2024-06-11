@@ -28,7 +28,7 @@ const Join: React.FC = () => {
   }, [nickname]);
 
   return (
-    <div className={`card-box join-box ${userName ? "d-none" : ""}`}>
+    <div className={`card-box join-box ${userName ? "d-none" : ""}`} data-testid="join-component">
       <div className="join-title">Welcome</div>
 
       <form>

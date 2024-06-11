@@ -37,7 +37,7 @@ export const useChat = () => {
 
   // Scroll to the bottom of the messages container
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
+    if (messagesEndRef.current && messagesEndRef.current.scrollIntoView) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };

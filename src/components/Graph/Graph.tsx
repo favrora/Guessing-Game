@@ -22,7 +22,7 @@ const Graph: React.FC = () => {
   };
 
   return (
-    <div className="col-12 mt-3">
+    <div className="col-12 mt-3" data-testid="info-graph-container">
       <div className="card-box graph-box">
         <div className="result">
           <CountUp

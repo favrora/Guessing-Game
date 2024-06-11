@@ -8,7 +8,7 @@ body {
 .card-box {
   background: #202632;
   border-radius: 8px;
-  border: 1px solid #323843;
+  box-shadow: 0 0 20px #0f1012;
 }
 
 @media screen and (max-width: 768px) {
@@ -31,12 +31,17 @@ input {
   border: 1px solid #323843;
 }
 
+input::placeholder {
+  color: #787878;
+}
+
 .btn-primary {
   background: linear-gradient(45deg, #c02e64, #fc5c4a);
   background-size: 100%;
   transition: 400ms;
   padding: 0 1.7em;
   font-size: 14px;
+  font-weight: 600;
   border: 0;
 }
 
@@ -46,5 +51,6 @@ input {
 
 .btn:disabled {
   opacity: 1;
-  background: #7c859a;
+  color: #cacaca;
+  background: #686a6c;
 }

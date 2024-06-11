@@ -12,7 +12,7 @@ import './App.css';
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <div className="App">
+      <div className="App" data-testid="app">
         <div className="container">
           <div className="row mt-5">
             <div className="col-12 col-md-4 position-relative">

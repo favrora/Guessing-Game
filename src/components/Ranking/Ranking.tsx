@@ -23,7 +23,7 @@ const Ranking: React.FC = () => {
   }, [ranking]);
 
   return (
-    <div className="col-12 col-md-6">
+    <div className="col-12 col-md-6" data-testid="ranking-chat-container">
       <div className="card-title">📊 Ranking</div>
 
       <div className="card-box ranking-box">
