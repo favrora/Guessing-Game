@@ -7,10 +7,6 @@
   padding: 15px;
 }
 
-.graph-box .recharts-surface {
-  max-width: 100%;
-}
-
 .result {
   position: absolute;
   z-index: 10;
@@ -21,4 +17,15 @@
 
 .graph-box .result.animation-ended {
   color: #f14e5f;
+}
+
+@media screen and (max-width: 576px) {
+  .graph-box {
+    height: 280px;
+  }
+
+  .result {
+    top: 35px;
+    font-size: 42px;
+  }
 }

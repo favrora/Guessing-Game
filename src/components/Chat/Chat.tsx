@@ -1,4 +1,3 @@
-import React from "react";
 import { Toaster } from "react-hot-toast";
 import { useChat } from "../../hooks/useChat";
 import './Chat.css';
@@ -6,9 +5,8 @@ import './Chat.css';
 /**
  * Chat component for displaying and sending chat messages.
  */
-const Chat: React.FC = () => {
+const Chat = () => {
   const {
-    // nickname, setNickname
     msg,
     setMsg,
     chatMessages,
@@ -27,12 +25,12 @@ const Chat: React.FC = () => {
       <div className="card-box">
         <Toaster />
 
-        <div className="messages-box" id="msg">
-          {chatMessages.map((el, index) => (
-            <div key={index} className="message">
+        <div className="messages-box" id="msg" aria-live="polite">
+          {chatMessages.map((message) => (
+            <div key={message.id} className="message">
               <div className="message-flex">
-                <div className="nickname">{el.nickname}:</div>
-                <div className="user-message">{el.msg}</div>
+                <div className="nickname">{message.nickname}:</div>
+                <div className="user-message">{message.msg}</div>
               </div>
             </div>
           ))}
@@ -47,7 +45,9 @@ const Chat: React.FC = () => {
             type="text"
             className="pr-3 pr-md-3"
             name="message"
+            aria-label="Chat message"
             placeholder="Send message"
+            maxLength={300}
             onChange={(e) => setMsg(e.target.value)}
             value={msg}
           />

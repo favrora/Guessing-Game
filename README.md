@@ -1,48 +1,67 @@
-# Guess The Number Assessment
+# Multiplier Arena
 
-This is a guessing game based on random numbers and will progress through a series of rounds. The goal of this game is to observe the rising Multiplier value, predict at which point it will freeze, and place points based on the prediction.
+[![CI](https://github.com/favrora/Guessing-Game/actions/workflows/ci.yml/badge.svg)](https://github.com/favrora/Guessing-Game/actions/workflows/ci.yml)
 
-Tech Stack: ```TypeScript, React, Redux, Node, Socket.io, Jest, ESLint```
+A real-time multiplayer prediction game built around short multiplier rounds. Players choose a stake and target multiplier, compete with simulated opponents, and chat through a Socket.IO channel.
 
-## Features
+![Multiplier Arena dashboard](./public/demo.jpg)
 
-- Livetime chat
-- Ranking system
-- Render graph with configurable speed
-- Possibility to choose the point and multiplier for the round
+## Highlights
 
-### Optimization
+- Responsive React 19 interface with an animated multiplier chart
+- Predictable round settlement with guarded balance updates
+- Real-time chat and online-presence updates over Socket.IO
+- Typed Redux Toolkit state and isolated game hooks
+- Input validation on both client and server boundaries
+- Vitest component tests, ESLint checks, and GitHub Actions CI
 
-- botMessages Controller to create bots and messages from them inside the game
-- Jest tests with custom store data to test the all components
-- ESLint is configured to maintain code quality and consistency
-- Everything is splited into small class components
+## Stack
 
-## Demo
+`React 19` · `TypeScript` · `Vite 8` · `Redux Toolkit` · `Socket.IO` · `Express` · `Recharts` · `Vitest`
 
-<img src="./public/demo.jpg" width="90%">
+## Architecture
 
-> Preview screenshot
+```text
+src/
+├── components/     Focused dashboard and game UI
+├── controllers/    Socket.IO server event handlers
+├── hooks/          Round, opponent, and chat behavior
+├── services/       Client socket boundary
+├── store/          Typed Redux state and actions
+└── utils/          Deterministic utility boundaries
+```
 
-## Getting Started
+The Vite development server proxies Socket.IO traffic to the local Express server. In production, Express serves the compiled client and the socket endpoint from one origin.
 
-To get a local copy up and running follow these simple steps.
+## Run Locally
 
-### Installation
+Requirements: Node.js 22.12 or newer.
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/favrora/Guessing-Game.git
-   ```
-2. From the root, install NPM packages
-   ```sh
-   npm install
-   ```
-3. Start the server:
-   ```sh
-   npm run server
-   ```
-4. In the second console, start the frontend:
-   ```sh
-   npm run start
-   ```
+```bash
+npm install
+npm run server
+```
+
+In a second terminal:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:5173`.
+
+## Quality Checks
+
+```bash
+npm run check
+```
+
+This runs linting, tests, TypeScript validation, and the production build. The same command runs in CI for every pull request and push to `master`.
+
+## Configuration
+
+The client uses the current origin by default. To connect to a separate Socket.IO server, set:
+
+```dotenv
+VITE_SOCKET_URL=https://your-socket-host.example
+```

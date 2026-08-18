@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setUsersRanking } from "../store/reduxStoreSlice";
+import { Player, setUsersRanking } from "../store/reduxStoreSlice";
+import { AppDispatch } from "../store/store";
 import { random } from "../utils/randomUtil";
 
-// Define the shape of a player
-interface Player {
-  id: number;
-  name: string;
-  point: any;
-  multiplier: any;
-  score: number;
-}
+const createInitialPlayers = (): Player[] =>
+  Array.from({ length: 5 }, (_, index) => ({
+    id: index,
+    name: index === 0 ? "You" : `Bot ${index}`,
+    point: "-",
+    multiplier: "-",
+    score: 0,
+  }));
 
 /**
  * Custom hook for managing autoplayers logic.
@@ -19,25 +20,12 @@ interface Player {
  * @returns An object containing autoplayers value and the function to generate autoplayers.
  */
 export const useAutoplayers = (pointsValue: number, multiplierValue: number) => {
-  const dispatch = useDispatch();
-  const [autoplayersValue, setAutoplayersValue] = useState<Player[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const [autoplayersValue, setAutoplayersValue] = useState<Player[]>(createInitialPlayers);
 
-  // Initialize autoplayers on component mount
   useEffect(() => {
-    const autoplayersGuess: Player[] = [];
-    for (let i = 0; i < 5; i++) {
-      const data: Player = {
-        id: i,
-        name: i === 0 ? "You" : `Bot ${i}`,
-        point: "-",
-        multiplier: "-",
-        score: 0,
-      };
-      autoplayersGuess.push(data);
-    }
-    setAutoplayersValue(autoplayersGuess);
-    dispatch(setUsersRanking(autoplayersGuess));
-  }, [dispatch]);
+    dispatch(setUsersRanking(autoplayersValue));
+  }, [autoplayersValue, dispatch]);
 
   /**
    * Generate guesses for autoplayers.
@@ -66,7 +54,6 @@ export const useAutoplayers = (pointsValue: number, multiplierValue: number) => 
       });
     }
     setAutoplayersValue(autoplayersGuess);
-    dispatch(setUsersRanking(autoplayersGuess));
   };
 
   return { autoplayersValue, generateAutoplayers };

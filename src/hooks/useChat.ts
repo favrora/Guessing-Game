@@ -4,9 +4,20 @@ import socket from "../services/ws";
 
 // Define the shape of a chat message
 interface ChatMessage {
+  id: string;
   nickname: string;
   msg: string;
 }
+
+type IncomingChatMessage = Omit<ChatMessage, "id">;
+
+let nextMessageId = 0;
+
+const createMessage = ({ nickname, msg }: IncomingChatMessage): ChatMessage => ({
+  id: `message-${nextMessageId++}`,
+  nickname,
+  msg,
+});
 
 export const useChat = () => {
   const [nickname, setNickname] = useState<string>("");
@@ -30,8 +41,9 @@ export const useChat = () => {
       });
       return;
     }
-    socket.emit("chat message", { nickname, msg });
-    setChatMessages((prevMessages) => [...prevMessages, { nickname, msg }]);
+    const message = { nickname: nickname || "You", msg: msg.trim() };
+    socket.emit("chat message", message);
+    setChatMessages((prevMessages) => [...prevMessages, createMessage(message)]);
     setMsg("");
   };
 
@@ -42,34 +54,30 @@ export const useChat = () => {
     }
   };
 
-  // Set up socket listeners on component mount
   useEffect(() => {
-    socket.on("chat message", ({ nickname, msg }: ChatMessage) => {
-      setChatMessages((prevMessages) => [...prevMessages, { nickname, msg }]);
-    });
-
-    socket.on("connect", () => {
-      socket.emit("new-user");
-    });
-
-    socket.on("users-on", (list: string[]) => {
-      setUsersOnline(list);
-    });
-
-    socket.on("user-data", (nick: string[]) => {
-      if (!nickname) setNickname(nick[0]);
-    });
-
-    socket.on("user-disconnected", (user: string) => {
+    const onMessage = (message: IncomingChatMessage) => {
+      setChatMessages((prevMessages) => [...prevMessages, createMessage(message)]);
+    };
+    const onUsersOnline = (list: string[]) => setUsersOnline(list);
+    const onUserData = (nick: string) => setNickname((current) => current || nick);
+    const onUserDisconnected = (user: string) => {
       if (user !== null) {
         setNotifications((prevNotifications) => [...prevNotifications, `${user} left the chat 👋🏻`]);
       }
-    });
+    };
+
+    socket.on("chat message", onMessage);
+    socket.on("users-on", onUsersOnline);
+    socket.on("user-data", onUserData);
+    socket.on("user-disconnected", onUserDisconnected);
 
     return () => {
-      socket.off();
+      socket.off("chat message", onMessage);
+      socket.off("users-on", onUsersOnline);
+      socket.off("user-data", onUserData);
+      socket.off("user-disconnected", onUserDisconnected);
     };
-  }, [nickname]);
+  }, []);
 
   // Scroll to bottom whenever chatMessages or notifications change
   useEffect(() => {

@@ -1,5 +1,4 @@
-import React from "react";
-import { LineChart, Line, XAxis, YAxis } from "recharts";
+import { LineChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import CountUp from "react-countup";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -8,7 +7,7 @@ import './Graph.css';
 /**
  * Graph component for displaying the generated value and graph.
  */
-const Graph: React.FC = () => {
+const Graph = () => {
   const generatedValue = useSelector((state: RootState) => state.reduxStore.generatedValue);
   const graphValue = [{ value: 0 }, { value: 0 }, { value: generatedValue }];
   const speedValue = useSelector((state: RootState) => state.reduxStore.speed);
@@ -37,27 +36,24 @@ const Graph: React.FC = () => {
           />
         </div>
 
-        <LineChart
-          width={500}
-          height={300}
-          data={graphValue}
-          key={Math.random()}
-        >
-          <Line
-            type="monotone"
-            dataKey="value"
-            strokeWidth={3}
-            stroke="#fb544e"
-            dot={false}
-            animationDuration={calcSpeed()}
-            hide={generatedValue === 0}
-          />
-          <YAxis domain={[0, 10]} hide={true} />
-          <XAxis dataKey="value" hide={true} />
-        </LineChart>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={graphValue} key={generatedValue}>
+            <Line
+              type="monotone"
+              dataKey="value"
+              strokeWidth={3}
+              stroke="#fb544e"
+              dot={false}
+              animationDuration={calcSpeed()}
+              hide={generatedValue === 0}
+            />
+            <YAxis domain={[0, 10]} hide />
+            <XAxis dataKey="value" hide />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
-}
+};
 
 export default Graph;

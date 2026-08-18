@@ -1,5 +1,3 @@
-import React from "react";
-
 interface SpeedControlProps {
   speedValue: number;
   onSpeedChange: (value: number) => void;
@@ -8,7 +6,7 @@ interface SpeedControlProps {
 /**
  * SpeedControl component for adjusting the speed.
  */
-const SpeedControl: React.FC<SpeedControlProps> = ({ speedValue, onSpeedChange }) => {
+const SpeedControl = ({ speedValue, onSpeedChange }: SpeedControlProps) => {
   return (
     <div className="card-box speed-box">
       <input
@@ -17,6 +15,7 @@ const SpeedControl: React.FC<SpeedControlProps> = ({ speedValue, onSpeedChange }
         min="1"
         max="5"
         step="1"
+        aria-label="Round speed"
         onChange={(e) => onSpeedChange(Number(e.target.value))}
         value={speedValue}
       />

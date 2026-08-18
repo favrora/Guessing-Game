@@ -1,6 +1,6 @@
 .join-box {
-  width: calc(100% - 20px);
-  max-width: calc(100% - 20px);
+  width: calc(100% - 24px);
+  max-width: calc(100% - 24px);
   height: 100%;
   padding: 20px;
   display: flex;
@@ -8,11 +8,13 @@
   align-items: center;
   justify-content: center;
   position: absolute;
+  z-index: 20;
 }
 
 @media screen and (max-width: 768px) {
   .join-box {
-    height: calc(100% - 15px);
+    width: calc(100% - 24px);
+    height: calc(100% - 20px);
   }
 }
 

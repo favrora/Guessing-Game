@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { RootState } from "../store/store";
+import { AppDispatch, RootState } from "../store/store";
 import {
   generateVal,
   speedStateVal,
@@ -16,11 +16,11 @@ import { random } from "../utils/randomUtil";
  * @returns An object containing game state and functions to manage the game.
  */
 export const useGameLogic = () => {
-  const dispatch = useDispatch();
-  const [speedValue, setSpeedValue] = useState<number>(0);
-  const [generatedValue, setGeneratedValue] = useState<number>(random(1, 9, 2));
+  const dispatch = useDispatch<AppDispatch>();
+  const [speedValue, setSpeedValue] = useState<number>(1);
   const [pointsValue, setPointsValue] = useState<number>(50);
   const [multiplierValue, setMultiplierValue] = useState<number>(1.0);
+  const roundTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { autoplayersValue, generateAutoplayers } = useAutoplayers(pointsValue, multiplierValue);
 
@@ -31,54 +31,56 @@ export const useGameLogic = () => {
    * Start the game with the current settings.
    */
   const startFunction = () => {
-    if (userBalance <= 0) {
+    if (animationShow) {
+      return;
+    }
+
+    if (pointsValue > userBalance) {
       toast("Not enough points to start", {
         duration: 4000,
-        style: {},
-        className: "",
-        icon: "⚠️",
         ariaProps: {
-          role: 'status',
-          'aria-live': 'polite',
+          role: "status",
+          "aria-live": "polite",
         },
       });
       return;
     }
 
-    const newGeneratedValue = random(1, 9, 2);
-    setGeneratedValue(newGeneratedValue);
+    const result = random(1, 9, 2);
+    const balanceAfterBet = userBalance - pointsValue;
+    const winnings = result >= multiplierValue ? Math.round(pointsValue * multiplierValue) : 0;
+
     dispatch(speedStateVal(speedValue));
     generateAutoplayers();
-    dispatch(generateVal(newGeneratedValue));
-    dispatch(updateBalanceVal(userBalance - pointsValue));
+    dispatch(generateVal(result));
+    dispatch(updateBalanceVal(balanceAfterBet));
 
-    setTimeout(updateBalance, calcTimeout());
+    roundTimer.current = setTimeout(() => {
+      dispatch(updateBalanceVal(balanceAfterBet + winnings));
+      dispatch(animStateVal(false));
+      roundTimer.current = null;
+    }, calcTimeout());
   };
 
-  /**
-   * Update the user's balance after the game round.
-   */
-  const updateBalance = () => {
-    dispatch(animStateVal(false));
-    if (generatedValue === multiplierValue) {
-      dispatch(updateBalanceVal(userBalance + pointsValue));
-    } else {
-      dispatch(updateBalanceVal(userBalance - pointsValue));
-    }
-  };
+  useEffect(() => {
+    return () => {
+      if (roundTimer.current) {
+        clearTimeout(roundTimer.current);
+      }
+    };
+  }, []);
 
   /**
    * Calculate the timeout duration based on speedValue.
    * @returns {number} - Timeout duration in milliseconds.
    */
   const calcTimeout = (): number => {
-    return 3000 / (speedValue || 1); // Higher speedValue means faster animation
+    return 3000 / speedValue;
   };
 
   return {
     speedValue,
     setSpeedValue,
-    generatedValue,
     pointsValue,
     setPointsValue,
     multiplierValue,

@@ -1,45 +1,46 @@
 const { botMessages } = require('./botMessages.js');
 
-let usersConnected = new Map();
+const usersConnected = new Map();
+const MAX_NICKNAME_LENGTH = 24;
+const MAX_MESSAGE_LENGTH = 300;
+
+const getOnlineUsers = () => Array.from(usersConnected.values());
 
 // Handle new socket connections
 const handleChatConnection = (socket) => {
-  let { id } = socket.client;
-
-  // Listen for 'user nickname' event
   socket.on("user nickname", (nickname) => {
-    usersConnected.set(nickname, [socket.client.id, socket.id]);
+    if (typeof nickname !== "string") return;
 
-    socket.broadcast.emit("users-on", Array.from(usersConnected.keys()));
+    const normalizedNickname = nickname.trim().slice(0, MAX_NICKNAME_LENGTH);
+    if (normalizedNickname.length < 3) return;
 
-    socket.emit("user-data", [nickname, socket.client.id]);
+    usersConnected.set(socket.id, normalizedNickname);
+    socket.nsp.emit("users-on", getOnlineUsers());
+    socket.emit("user-data", normalizedNickname);
 
-    botMessages(socket);
+    const cancelBotMessages = botMessages(socket);
+    socket.once("disconnect", cancelBotMessages);
   });
 
-  // Listen for 'chat message' events from the client
   socket.on("chat message", ({ nickname, msg }) => {
-    socket.broadcast.emit("chat message", { nickname, msg });
+    if (typeof msg !== "string") return;
+
+    const normalizedMessage = msg.trim().slice(0, MAX_MESSAGE_LENGTH);
+    if (!normalizedMessage) return;
+
+    socket.broadcast.emit("chat message", {
+      nickname: usersConnected.get(socket.id) || String(nickname).slice(0, MAX_NICKNAME_LENGTH),
+      msg: normalizedMessage,
+    });
   });
 
-  // Handle socket disconnections
   socket.on("disconnect", () => {
-    let tempUserNickname;
-
-    // Find the nickname of the disconnected user
-    for (let key of usersConnected.keys()) {
-      if (usersConnected.get(key)[0] === id) {
-        tempUserNickname = key;
-        usersConnected.delete(key);
-        break;
-      }
+    const disconnectedUser = usersConnected.get(socket.id);
+    usersConnected.delete(socket.id);
+    socket.nsp.emit("users-on", getOnlineUsers());
+    if (disconnectedUser) {
+      socket.broadcast.emit("user-disconnected", disconnectedUser);
     }
-
-    // Broadcast the updated list of connected users
-    socket.broadcast.emit("users-on", Array.from(usersConnected.keys()));
-
-    // Broadcast the nickname of the disconnected user
-    socket.broadcast.emit("user-disconnected", tempUserNickname);
   });
 };
 

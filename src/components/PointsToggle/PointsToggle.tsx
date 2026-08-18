@@ -1,5 +1,3 @@
-import React from "react";
-
 interface PointsToggleProps {
   pointsValue: number;
   userBalance: number;
@@ -9,7 +7,7 @@ interface PointsToggleProps {
 /**
  * PointsToggle component for adjusting points.
  */
-const PointsToggle: React.FC<PointsToggleProps> = ({ pointsValue, userBalance, onPointsChange }) => {
+const PointsToggle = ({ pointsValue, userBalance, onPointsChange }: PointsToggleProps) => {
   const pointsMinus = () => {
     if (pointsValue > 25) onPointsChange(pointsValue - 25);
   };
@@ -22,29 +20,35 @@ const PointsToggle: React.FC<PointsToggleProps> = ({ pointsValue, userBalance, o
     <div className="card-box info-box toggle">
       <div className="toggle-title">Points</div>
       <div className="toggle-menu">
-        <div
+        <button
+          type="button"
           className="toggle-minus option"
-          role="button"
-          tabIndex={0}
           onClick={pointsMinus}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              pointsMinus();
-            }
-          }}
+          aria-label="Decrease points"
+          disabled={pointsValue <= 25}
         >
           ▼
-        </div>
+        </button>
         <input
           type="number"
           className="toggle-input"
           min="0"
           max={userBalance}
           step="25"
-          onChange={(e) => onPointsChange(Number(e.target.value))}
+          aria-label="Points"
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            onPointsChange(Math.min(Math.max(value, 25), userBalance));
+          }}
           value={pointsValue}
         />
-        <button className="toggle-plus option" onClick={pointsPlus}>
+        <button
+          type="button"
+          className="toggle-plus option"
+          onClick={pointsPlus}
+          aria-label="Increase points"
+          disabled={pointsValue + 25 > userBalance}
+        >
           ▲
         </button>
       </div>

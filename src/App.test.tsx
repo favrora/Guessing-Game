@@ -1,70 +1,68 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
-import App from './App';
+import { configureStore } from "@reduxjs/toolkit";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import App from "./App";
+import reduxStoreReducer from "./store/reduxStoreSlice";
 
-const mockStore = configureStore([]);
+vi.mock("./services/ws", () => ({
+  default: {
+    emit: vi.fn(),
+    off: vi.fn(),
+    on: vi.fn(),
+  },
+}));
 
-describe('App', () => {
-  let store: any;
-
-  beforeEach(() => {
-    store = mockStore({
-      reduxStore: {
-        userName: '',
-        balance: 1000,
-        generatedValue: 0,
-        speed: 0,
-        animShow: false,
-        usersRanking: [
-          { id: '1', name: 'John Doe', score: 100 },
-          { id: '2', name: 'Jane Doe', score: 200 },
-        ],
-      },
-    });
+const renderApp = () => {
+  const store = configureStore({
+    reducer: { reduxStore: reduxStoreReducer },
   });
 
-  test('renders the App component with all child components', () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+  );
 
-    expect(screen.getByTestId('join-component')).toBeInTheDocument();
-    expect(screen.getByTestId('info-graph-container')).toBeInTheDocument();
-    expect(screen.getByTestId('ranking-chat-container')).toBeInTheDocument();
+  return store;
+};
+
+describe("Multiplier Arena", () => {
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
   });
 
-  test('renders the Join component and allows input', async () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
+  test("renders the complete dashboard", async () => {
+    renderApp();
 
-    const input = screen.getByPlaceholderText('Enter your name');
-    fireEvent.change(input, { target: { value: 'John Doe' } });
-
-    await waitFor(() => {
-      expect(input).toHaveValue('John Doe');
-    });
+    expect(screen.getByRole("heading", { name: "Multiplier Arena" })).toBeInTheDocument();
+    expect(screen.getByTestId("join-component")).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("info-graph-container", {}, { timeout: 5000 }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("ranking-chat-container")).toBeInTheDocument();
   });
 
-  test('renders the GameController component and allows interaction', async () => {
-    render(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
+  test("accepts a valid player name", () => {
+    const store = renderApp();
+    const input = screen.getByRole("textbox", { name: "Player name" });
 
-    const startButton = screen.getByText('Start');
+    fireEvent.change(input, { target: { value: "David" } });
+    fireEvent.click(screen.getByRole("button", { name: "Accept" }));
+
+    expect(store.getState().reduxStore.userName).toBe("David");
+    expect(screen.getByText("David")).toBeInTheDocument();
+  });
+
+  test("prevents overlapping rounds", () => {
+    vi.useFakeTimers();
+    renderApp();
+
+    const startButton = screen.getByRole("button", { name: "Start" });
     fireEvent.click(startButton);
 
-    await waitFor(() => {
-      expect(startButton).toBeDisabled();
-    });
+    expect(startButton).toBeDisabled();
+    expect(startButton).toHaveTextContent("Started");
   });
 });

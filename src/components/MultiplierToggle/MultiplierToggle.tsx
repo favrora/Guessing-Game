@@ -1,5 +1,3 @@
-import React from "react";
-
 interface MultiplierToggleProps {
   multiplierValue: number;
   onMultiplierChange: (value: number) => void;
@@ -8,7 +6,7 @@ interface MultiplierToggleProps {
 /**
  * MultiplierToggle component for adjusting the multiplier.
  */
-const MultiplierToggle: React.FC<MultiplierToggleProps> = ({ multiplierValue, onMultiplierChange }) => {
+const MultiplierToggle = ({ multiplierValue, onMultiplierChange }: MultiplierToggleProps) => {
   const multiplierMinus = () => {
     if (multiplierValue >= 1.25) onMultiplierChange(multiplierValue - 0.25);
   };
@@ -21,19 +19,15 @@ const MultiplierToggle: React.FC<MultiplierToggleProps> = ({ multiplierValue, on
     <div className="card-box info-box toggle">
       <div className="toggle-title">Multiplier</div>
       <div className="toggle-menu">
-        <div
+        <button
+          type="button"
           className="toggle-minus option"
-          role="button"
-          tabIndex={0}
           onClick={multiplierMinus}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              multiplierMinus();
-            }
-          }}
+          aria-label="Decrease multiplier"
+          disabled={multiplierValue <= 1}
         >
           ▼
-        </div>
+        </button>
 
         <input
           type="number"
@@ -41,10 +35,20 @@ const MultiplierToggle: React.FC<MultiplierToggleProps> = ({ multiplierValue, on
           min="1"
           max="10"
           step="0.25"
-          onChange={(e) => onMultiplierChange(Number(e.target.value))}
+          aria-label="Multiplier"
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            onMultiplierChange(Math.min(Math.max(value, 1), 10));
+          }}
           value={multiplierValue}
         />
-        <button className="toggle-plus option" onClick={multiplierPlus}>
+        <button
+          type="button"
+          className="toggle-plus option"
+          onClick={multiplierPlus}
+          aria-label="Increase multiplier"
+          disabled={multiplierValue >= 10}
+        >
           ▲
         </button>
       </div>

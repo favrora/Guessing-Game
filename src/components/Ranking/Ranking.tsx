@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import './Ranking.css';
@@ -13,7 +13,7 @@ interface Player {
 /**
  * Ranking component for displaying the leaderboard.
  */
-const Ranking: React.FC = () => {
+const Ranking = () => {
   const ranking = useSelector((state: RootState) => state.reduxStore.usersRanking) as Player[];
   const animationShow = useSelector((state: RootState) => state.reduxStore.animShow);
 
@@ -27,7 +27,7 @@ const Ranking: React.FC = () => {
       <div className="card-title">📊 Ranking</div>
 
       <div className="card-box ranking-box">
-        <table className="ranking-table">
+        <table className="ranking-table" aria-label="Player ranking">
           <thead>
             <tr>
               <th>No.</th>
@@ -55,6 +55,6 @@ const Ranking: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Ranking;

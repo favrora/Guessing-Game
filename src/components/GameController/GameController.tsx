@@ -1,4 +1,3 @@
-import React from "react";
 import { useGameLogic } from "../../hooks/useGameLogic";
 import './GameController.css';
 import PointsToggle from "../PointsToggle/PointsToggle";
@@ -9,7 +8,7 @@ import CurrentRound from "../CurrentRound/CurrentRound";
 /**
  * GameController component for managing the game process.
  */
-const GameController: React.FC = () => {
+const GameController = () => {
   const {
     speedValue,
     setSpeedValue,
@@ -57,6 +56,6 @@ const GameController: React.FC = () => {
       <SpeedControl speedValue={speedValue} onSpeedChange={setSpeedValue} />
     </div>
   );
-}
+};
 
 export default GameController;

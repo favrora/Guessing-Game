@@ -1,12 +1,4 @@
-import React from "react";
-
-interface Player {
-  id: number;
-  name: string;
-  point: any;
-  multiplier: any;
-  score: number;
-}
+import { Player } from "../../store/reduxStoreSlice";
 
 interface CurrentRoundProps {
   autoplayersValue: Player[];
@@ -15,10 +7,10 @@ interface CurrentRoundProps {
 /**
  * CurrentRound component for displaying the current round's participants.
  */
-const CurrentRound: React.FC<CurrentRoundProps> = ({ autoplayersValue }) => {
+const CurrentRound = ({ autoplayersValue }: CurrentRoundProps) => {
   return (
     <div className="card-box round-box">
-      <table className="ranking-table">
+      <table className="ranking-table" aria-label="Current round players">
         <thead>
           <tr>
             <th>Name</th>

@@ -2,35 +2,27 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
-const cors = require("cors");
+const fs = require("fs");
 const { handleChatConnection } = require("./src/controllers/chatController");
 
 const app = express();
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 8080;
+const clientDirectory = path.join(__dirname, "dist");
 
-// Middleware to enable CORS and serve static files from React app
-app.use(cors());
-app.use(express.static(path.join(__dirname, 'build')));
+app.disable("x-powered-by");
+app.get("/health", (_request, response) => response.json({ status: "ok" }));
 
-// Initialize Socket.IO with CORS configuration
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000", // Update with your frontend origin
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true,
-  },
-});
+const io = new Server(server);
 
-// Initialize Socket.IO connection handler
 io.on("connection", handleChatConnection);
 
-// Serve React app for any unspecified routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+if (fs.existsSync(clientDirectory)) {
+  app.use(express.static(clientDirectory));
+  app.get("*", (_request, response) => {
+    response.sendFile(path.join(clientDirectory, "index.html"));
+  });
+}
 
-// Start the server
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Player {
+export interface Player {
   id: number;
   name: string;
-  point: any;
-  multiplier: any;
+  point: number | "-";
+  multiplier: number | "-";
   score: number;
 }
 

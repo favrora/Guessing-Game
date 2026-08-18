@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import './Info.css';
@@ -6,11 +5,8 @@ import './Info.css';
 /**
  * Info component for displaying user information and balance.
  */
-const Info: React.FC = () => {
-  // Select userName from the Redux store
+const Info = () => {
   const userName = useSelector((state: RootState) => state.reduxStore.userName);
-  
-  // Select userBalance from the Redux store
   const userBalance = useSelector((state: RootState) => state.reduxStore.balance);
 
   return (
@@ -39,6 +35,6 @@ const Info: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Info;
